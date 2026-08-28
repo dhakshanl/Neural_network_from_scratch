@@ -24,7 +24,7 @@ explaining the math, not just how to run it.
 ## The ladder
 
 The full beginner → cracked progression, with what makes each rung harder than
-the last: **[The Cracked Ladder](https://claude.ai/artifact-url-pending)**
+the last: **[The Cracked Ladder](https://claude.ai/code/artifact/9a8daf0a-f7e4-483f-88c9-c389cf5db7a6)**
 
 ## Rules
 
