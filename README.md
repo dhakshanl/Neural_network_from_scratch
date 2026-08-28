@@ -14,9 +14,9 @@ gitignored — they're downloadable, they don't belong in history.
 
 ## Projects
 
-| # | Project | Status |
-|---|---------|--------|
-| 01 | Neural network from scratch (MNIST MLP, numpy) | not started |
+| # | Rung | Project | Status |
+|---|------|---------|--------|
+| 01 | 1 | [Scalar autograd engine](01_autograd/) | in progress — 0/23 tests |
 
 Add a row when you start one. Each project folder gets its own `README.md`
 explaining the math, not just how to run it.
