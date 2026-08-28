@@ -1,0 +1,26 @@
+# environments
+.venv/
+__pycache__/
+*.pyc
+
+# datasets — never commit these, they are downloadable
+data/
+datasets/
+*.gz
+*.tar
+*.zip
+*.npz
+
+# training output
+runs/
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.png
+!docs/*.png
+
+# editors
+.vscode/
+.idea/
+.ipynb_checkpoints/
