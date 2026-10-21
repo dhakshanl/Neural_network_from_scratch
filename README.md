@@ -16,7 +16,7 @@ gitignored — they're downloadable, they don't belong in history.
 
 | # | Rung | Project | Status |
 |---|------|---------|--------|
-| 01 | 1 | [Scalar autograd engine](01_autograd/) | in progress — 0/23 tests |
+| 01 | 1 | [Scalar autograd engine](01_autograd/) | in progress — 40/40 tests, break-it experiments next |
 
 Add a row when you start one. Each project folder gets its own `README.md`
 explaining the math, not just how to run it.
