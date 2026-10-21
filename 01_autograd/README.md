@@ -99,9 +99,79 @@ You can answer these without looking at the code:
 4. Why does `a / b` get a correct gradient when you never wrote a rule for division?
 5. In one sentence, with no jargon: what does `backward()` actually do?
 
+## Part 2 — a network on top of it
+
+Engine green? Now build something with it.
+
+```
+nn.py        Module / Neuron / Layer / MLP — you fill in 7 methods
+train.py     the training loop — you write the 5 lines inside it
+test_nn.py   17 more tests
+```
+
+```bash
+python -m pytest -q          # 40 tests total once both files are done
+python train.py              # ~10 seconds
+```
+
+**Nothing in Part 2 touches gradients.** You wrote backprop once; it now works
+for a 105-parameter network without a single change to `engine.py`. That is the
+whole argument for the design.
+
+### The task
+
+Separate points inside a circle from points outside it. No straight line can do
+that, so a network without `tanh` would be stuck near chance — it is a fair test
+of whether your nonlinearity actually does anything.
+
+Expect `loss 1.9 → 0.2, accuracy 51% → 98%`.
+
+### The three levels
+
+```
+Neuron    tanh(w1*x1 + w2*x2 + ... + b)      one weighted sum, then a squash
+Layer     a list of Neurons, same input to each
+MLP       a list of Layers, each feeding the next
+```
+
+That's the entire architecture. Deep networks are this, wider and taller.
+
+### The five lines
+
+Inside the loop in `train.py`, and they never change — not for CNNs, not for
+transformers, not for anything later on the ladder:
+
+```
+forward     preds = [model(x) for x, _ in data]
+loss        one number: how wrong we are
+zero_grad   reset gradients — they accumulate, remember the += in your engine
+backward    one call fills .grad on all 105 parameters
+update      p.data -= LEARNING_RATE * p.grad
+```
+
+### Then break it
+
+| # | Change | What to watch |
+|---|--------|---------------|
+| 1 | Delete `model.zero_grad()` | Gradients pile up across steps; the updates get wilder every step. This is exactly why PyTorch makes you call it. |
+| 2 | `LEARNING_RATE = 0.5` | Loss climbs to ~10⁶⁰. Overshooting compounds. |
+| 3 | `LEARNING_RATE = 0.001` | Learns, barely. Same algorithm, wrong step size. |
+| 4 | `nonlin=False` on every layer | Stuck near 50%. A stack of linear layers is one linear layer, and no line separates a disc from its ring. |
+| 5 | `MLP(2, [1])` — no hidden layer | Same failure, more obviously. |
+| 6 | Init all weights to `0.0` instead of random | Every neuron in a layer gets identical gradients forever. Symmetry never breaks. |
+
+## Rung 1 is done when
+
+You can answer these without looking:
+
+1. Why does `_backward` have to be a closure rather than a method?
+2. Why must the topological sort finish before any gradient flows?
+3. Why does `a / b` get a correct gradient when you never wrote a division rule?
+4. What breaks if you delete `zero_grad()`, and why?
+5. Why can't a network without `tanh` solve the circle task, no matter how deep?
+
 ## Next
 
-When all 23 pass, tell me and I'll scaffold the second half: `Neuron`, `Layer`
-and `MLP` built on top of your engine, plus a training loop that fits a real
-(tiny) dataset. Your `Value` class will run the whole thing without a single
-change — which is the moment the design pays off.
+Rung 2: the same ideas as matrices instead of scalars — an MLP on real MNIST
+digits, in numpy, still no framework. Your scalar engine would need days per
+epoch; vectorising it is the point.
